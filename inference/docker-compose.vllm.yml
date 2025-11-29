@@ -1,0 +1,29 @@
+version: '3.8'
+
+services:
+  vllm-server:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: fraudguard-vllm
+    ports:
+      - "8001:8000"
+    volumes:
+      - ../training/lora_model:/app/models/lora_model:ro
+    environment:
+      - CUDA_VISIBLE_DEVICES=0
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
+    networks:
+      - fraudguard-net
+    restart: unless-stopped
+
+networks:
+  fraudguard-net:
+    external: true
+

@@ -1,0 +1,13 @@
+project: fraudguard
+registry: data/registry.db
+provider: local
+online_store:
+  type: redis
+  connection_string: "${REDIS_URL:localhost:6379}"
+offline_store:
+  type: postgres
+  host: "${POSTGRES_HOST:localhost}"
+  port: "${POSTGRES_PORT:5432}"
+  database: "${POSTGRES_DB:fraudguard}"
+  user: "${POSTGRES_USER:fraudguard_user}"
+  password: "${POSTGRES_PASSWORD:changeme_in_production}"

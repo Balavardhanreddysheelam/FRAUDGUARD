@@ -1,0 +1,18 @@
+{
+  "buildCommand": "cd frontend && npm install && npm run build",
+  "outputDirectory": "frontend/.next",
+  "devCommand": "cd frontend && npm run dev",
+  "installCommand": "cd frontend && npm install",
+  "framework": "nextjs",
+  "rewrites": [
+    {
+      "source": "/api/:path*",
+      "destination": "https://your-render-backend-url.onrender.com/:path*"
+    }
+  ],
+  "env": {
+    "NEXT_PUBLIC_API_URL": "https://your-render-backend-url.onrender.com"
+  },
+  "_comment": "IMPORTANT: Before deploying, update the URLs above with your actual Render backend URL. Set NEXT_PUBLIC_API_URL in Vercel dashboard environment variables."
+}
+

@@ -1,0 +1,90 @@
+version: '3.8'
+
+services:
+  db:
+    image: postgres:15-alpine
+    container_name: fraudguard-db
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-fraudguard_user}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-changeme_in_production}
+      POSTGRES_DB: ${POSTGRES_DB:-fraudguard}
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - fraudguard-net
+
+  redis:
+    image: redis:7-alpine
+    container_name: fraudguard-redis
+    ports:
+      - "6379:6379"
+    networks:
+      - fraudguard-net
+
+  vllm-server:
+    build:
+      context: ./inference
+      dockerfile: Dockerfile
+    container_name: fraudguard-vllm
+    ports:
+      - "8001:8000"
+    volumes:
+      - ./inference/model/fraudguard-8b-merged:/app/models/fraudguard-8b-merged:ro
+    environment:
+      - CUDA_VISIBLE_DEVICES=0
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
+    networks:
+      - fraudguard-net
+    restart: unless-stopped
+    # Note: Requires NVIDIA GPU. For CPU-only, use a different base image and remove GPU requirements
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: fraudguard-backend
+    ports:
+      - "8000:8000"
+    environment:
+      - VLLM_SERVER_URL=${VLLM_SERVER_URL:-http://vllm-server:8000/v1}
+      - REDIS_URL=redis://redis:6379
+      - POSTGRES_HOST=db
+      - POSTGRES_PORT=5432
+      - POSTGRES_DB=${POSTGRES_DB:-fraudguard}
+      - POSTGRES_USER=${POSTGRES_USER:-fraudguard_user}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:-changeme_in_production}
+      - ENABLE_AUTH=${ENABLE_AUTH:-false}
+      - API_KEY=${API_KEY:-}
+      - CORS_ORIGINS=${CORS_ORIGINS:-http://localhost:3000,http://localhost:5000}
+      - VLLM_TIMEOUT=${VLLM_TIMEOUT:-30.0}
+      - CACHE_TTL=${CACHE_TTL:-3600}
+      - RATE_LIMIT_PER_MINUTE=${RATE_LIMIT_PER_MINUTE:-60}
+      - LOG_LEVEL=${LOG_LEVEL:-INFO}
+    depends_on:
+      - db
+      - redis
+      # vllm-server dependency removed - using RunPod instead
+    networks:
+      - fraudguard-net
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+networks:
+  fraudguard-net:
+    driver: bridge
+
+volumes:
+  postgres_data:
