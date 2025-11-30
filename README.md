@@ -2,7 +2,7 @@
 
 > **Real-time Financial Fraud Detection System powered by Fine-tuned Llama-3.1-8B with LoRA**
 
-[![Live Demo](https://img.shields.io/badge/demo-live-success)](https://your-demo-link.vercel.app)
+[![Live Demo](https://img.shields.io/badge/demo-live-success)](https://fraudguard-swart.vercel.app)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 
 A production-grade fraud detection system featuring a fine-tuned LLM for explainable transaction risk assessment, built with FastAPI, Next.js, and modern MLOps practices.
@@ -14,8 +14,18 @@ A production-grade fraud detection system featuring a fine-tuned LLM for explain
 - ✅ **Custom-trained LLM** using Parameter-Efficient Fine-Tuning (LoRA/QLoRA)
 - ✅ **Production ML Pipeline** from data generation → training → inference → deployment
 - ✅ **Explainable AI** with SHAP values + natural language explanations
-- ✅ **Full-stack deployment** (Frontend: Vercel, Backend: Render, Inference: RunPod)
+- ✅ **Full-stack deployment** (Frontend: Vercel, Backend: Render)
 - ✅ **Enterprise features**: Redis caching, rate limiting, structured logging, health checks
+
+---
+
+## 🚀 Live Production Status
+
+**Current Deployment:**
+- **Frontend:** [https://fraudguard-swart.vercel.app](https://fraudguard-swart.vercel.app)
+- **Backend:** [https://fraudguard-backend-pk3d.onrender.com](https://fraudguard-backend-pk3d.onrender.com)
+
+> **Note on AI Inference:** The system is currently running in **Fallback Mode** (Rule-based + SHAP). The fine-tuned Llama-3 model is trained and ready but requires a GPU instance (RunPod) to be attached for live inference. This is a cost-optimization decision for the current demo.
 
 ---
 
