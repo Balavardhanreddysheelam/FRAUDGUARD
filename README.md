@@ -1,11 +1,14 @@
 # FraudGuard v2 🛡️
 
-> **Real-time Financial Fraud Detection System powered by Fine-tuned Llama-3.1-8B with LoRA**
+> **Real-time Financial Fraud Detection System featuring Fine-tuned Llama-3.1-8B with LoRA**
 
 [![Live Demo](https://img.shields.io/badge/demo-live-success)](https://fraudguard-swart.vercel.app)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
+[![Status](https://img.shields.io/badge/Status-Production_Ready_(Hybrid_Inference)-green)](https://github.com/Balavardhanreddysheelam/FRAUDGUARD)
 
 A production-grade fraud detection system featuring a fine-tuned LLM for explainable transaction risk assessment, built with FastAPI, Next.js, and modern MLOps practices.
+
+> **⚠️ Demo Note:** The live demo is currently running in **Hybrid/Fallback Mode** (Rule-based) to minimize GPU hosting costs. The full Llama-3 inference pipeline is implemented and available in the codebase.
 
 ---
 
